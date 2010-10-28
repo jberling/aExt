@@ -1,78 +1,58 @@
 var aExt = {
 
-    error: function(msg) {
-      var console = window.console;
-      if (console) console.error(msg);
-    },
+  disableWarnings: false,
 
-    log: function(msg) {
-      var console = window.console;
-      if (console) console.log(msg);
-    },
-
-    browserImplements: {
-      map:          Array.prototype.map,        // ECMA-262.pdf p 135
-      sort:         Array.prototype.sort,       // ECMA-262.pdf p 128
-      indexOf:      Array.prototype.indexOf,    // ECMA-262.pdf p 132
-      every:        Array.prototype.every,      // ECMA-262.pdf p 133
-      some:         Array.prototype.some,       // ECMA-262.pdf p 134
-      forEach:      Array.prototype.forEach,    // ECMA-262.pdf p 135
-      filter:       Array.prototype.filter,     // ECMA-262.pdf p 136
-      reduce :      Array.prototype.reduce,     // ECMA-262.pdf p 137
-      reduceRight : Array.prototype.reduceRight // ECMA-262.pdf p 138
-      /*
-      zip
-      unzip
-       */
-    },
-
-    extend: function () {
-      if (!this.browserImplements.reduce) {
-        Array.prototype.reduce = function(f, initval) {
-          // reduce function must be defined,
-          // since native reduce implementation require this.
-          if (!f) {
-            aExt.error("Reduce function must be defined.");
-          }
-          else {
-            return aExt.reduce(this, f, initval);
-          }
-        }
-      }
-      else {
-        aExt.log ("Browser implements reduce, aExt.reduce not used.");
-      }
-    },
-
-    reduce: function (array, f, initval) {
-
-      var f = f || function (a, i) { return a + i; };
-
-      if (this.browserImplements.reduce) {
-        return initval && array.length > 0
-            ? array.reduce(f, initval)
-            : array.length > 0 ? array.reduce(f) : initval;
-      } else {
-        var inner = function (acc, array, f) {
-          var result = array.length > 0 ? f(acc, array[0]) : acc;
-          return array.length > 0
-                  ? inner(result, array.slice(1), f)
-                  : result;
-        };
-       
-        return initval ? inner(initval, array, f)
-                       : inner(array[0], array.slice(1), f);
-      }
-    },
-
-    map: function (array, f) {
-
-      if (this.browserImplements.map){
-        return array.map(f);
-      } else {
-        var inner = function (acc, array, f, i, len) {
-          var res = array.length > 0 ? f(acc, array[0])
-        }
-      }
+  warn: function(msg){
+    if (window.console && !this.disableWarnings) {
+      window.console.warn(msg);
     }
+  },
+
+  zip : function(array, zipper) {
+
+    if (array.length === 0) return [];
+
+    var inner = function (acc, rest) {
+
+      var current = rest.map(function(item){
+        return item[0];
+      });
+
+      var cont = rest.every(function(item, index){
+        return item.length > 0;
+      });
+
+      if (cont) {
+        var rest = rest.map(function(item) {
+          return item.slice(1);
+        });
+        var acc = acc.length > 0
+            ? acc.concat([current]) : [current];
+        return inner(acc, rest);
+      }
+      else return acc;
+    };
+
+    var zipped = inner ([], array);
+
+    return zipper ? zipped.map(zipper) : zipped;
+
+  }
 };
+
+// combines an array of arrays into pairs. Add a "zipper" function to tell how to
+// combine the items.
+(function(){
+
+  if(!Array.prototype.map) this.warn("Array.prototype.map not implemented");
+  if(!Array.prototype.every) this.warn("Array.prototype.every not implemented");
+
+  if (Array.prototype.zip) {
+    this.warn("Array.prototype.zip already defined. Use aExt.zip instead.");
+  } else {
+    Array.prototype.zip = function(zipper) {
+      return aExt.zip(this, zipper);
+    };
+  }
+
+})();
