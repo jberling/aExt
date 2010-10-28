@@ -10,8 +10,8 @@ result. If no "zipper" function is defined the associated items will be placed i
     var fruits = 
         [ ["apple", "pear", "banana"], 
           ["red", "green", "yellow"] 
-        ].zip(function(name, color) {
-	  return { name: name, color: color };
+        ].zip(function(pair) {
+	  return { name: pair[0], color: pair[1] };
         });
 
 The code above will result in this:
