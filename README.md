@@ -1,14 +1,38 @@
-## zip ##
+## compact ##
 
-The zip combines an array of arrays. 
+The compact method removes undefined and null values from an array. The optional
+parameter decides if empty arrays should be removed also.
+
+This method is not recursive, and will only remove instances the highest level.
+
+    [ "a", null, false, undefined, 1, [], [[]] ].compact()
+
+The code above will result in the code below.
+
+    [ "a", false, 1, [], [[]] ]
+
+
+## flatten ##
+
+Flatten returns an array where all sub arrays have been replaced with their items. This way
+a "one-dimensional" array is created. It removes empty arrays.
+
+    [ [ "a", ["b"] ], "c", [] ].flatten()
+
+will result in
+
+    [ "a", "b", "c" ]
+
+## zip (and unzip) ##
+
+The zip method combines an array of arrays.
 All first item in every sub array will be associated with each others, the second item in every
 sub array will be associated with every other second item and so forth. 
 
-    var fruits =
-      [ ["apple" , "pear"   , "banana"],
-        ["red"   , "green"  , "yellow"],
-        ["Sweden", "Holland", "Kenya" ]
-      ].zip()
+    [ ["apple" , "pear"   , "banana"],
+      ["red"   , "green"  , "yellow"],
+      ["Sweden", "Holland", "Kenya" ]
+    ].zip()
 
 The code above will result in this:
 
@@ -22,13 +46,12 @@ If you want to reverse the process, you can call zip again, since it also works 
 There is also a possibility to define a "zipMap" function, if you don't want to
 place the zipped values in an array.
 
-    var fruits =
-      [ ["apple" , "pear"   , "banana"],
-        ["red"   , "green"  , "yellow"],
-        ["Sweden", "Holland", "Kenya" ]
-      ].zip(function(name, color, origin) {
-	      return {name: name, color: color, origin: origin};
-      });
+    [ ["apple" , "pear"   , "banana"],
+      ["red"   , "green"  , "yellow"],
+      ["Sweden", "Holland", "Kenya" ]
+    ].zip(function(name, color, origin) {
+      return {name: name, color: color, origin: origin};
+    });
 
 The code above will result in this:
 
