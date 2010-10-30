@@ -1,6 +1,6 @@
 var aExt = {
 
-  disableWarnings: false,
+  disableWarnings: false, // change this if you don't want any warnings.
 
   warn: function(msg){
     if (window.console && !this.disableWarnings) {
@@ -8,40 +8,27 @@ var aExt = {
     }
   },
 
-  zip : function(array, zipper) {
+  zip : function(array, zipMap) { // also works as unzip
 
-    if (array.length === 0) return [];
-
-    var inner = function (acc, rest) {
-
-      var current = rest.map(function(item){
-        return item[0];
+    if (array.length) {
+      var zipped = array.reduce(function(acc, rest){
+        return acc.map(function(item, index){
+          item = item instanceof Array ? item : [item];
+          if (rest[index]) return item.concat(rest[index]);
+        })
       });
 
-      var cont = rest.every(function(item, index){
-        return item.length > 0;
-      });
+      zipped = zipped.filter(function(item){return item ? true : false});
 
-      if (cont) {
-        var rest = rest.map(function(item) {
-          return item.slice(1);
-        });
-        var acc = acc.length > 0
-            ? acc.concat([current]) : [current];
-        return inner(acc, rest);
-      }
-      else return acc;
-    };
-
-    var zipped = inner ([], array);
-
-    return zipper ? zipped.map(zipper) : zipped;
-
+      if (zipMap) {
+        return zipped.map(function(item){
+          return zipMap.apply(this, item);
+        })
+      } else return zipped;
+    } else return [];
   }
 };
 
-// combines an array of arrays into pairs. Add a "zipper" function to tell how to
-// combine the items.
 (function(){
 
   if(!Array.prototype.map) this.warn("Array.prototype.map not implemented");
