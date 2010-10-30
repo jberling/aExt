@@ -1,4 +1,18 @@
-## compact ##
+# aExt #
+
+aExt is a collection of methods that extends the JavaScript Array. They have been tested on
+Chrome 7, Firefox 3.6 and Opera 10.6. The methods do not work very well with IE8, yet.
+
+## ECMA-262 ##
+
+The methods below are part of the ECMA-262 specification (http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-262.pdf).
+
+aExt only Implements these methods for browsers who doesn't implement them natively.
+So far aExt implements filter, map, reduce and every if the browser doesn't do it.
+
+## Beyond ECMA
+
+### compact ###
 
 The compact method removes undefined and null values from an array. The optional
 parameter decides if empty arrays should be removed also.
@@ -12,7 +26,7 @@ The code above will result in the code below.
     [ "a", false, 1, [], [[]] ]
 
 
-## flatten ##
+### flatten ###
 
 Flatten returns an array where all sub arrays have been replaced with their items. This way
 a "one-dimensional" array is created. It removes empty arrays.
@@ -23,7 +37,7 @@ will result in
 
     [ "a", "b", "c" ]
 
-## zip (and unzip) ##
+### zip (and unzip) ###
 
 The zip method combines an array of arrays.
 All first item in every sub array will be associated with each others, the second item in every

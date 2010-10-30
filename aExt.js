@@ -1,11 +1,55 @@
 var aExt = {
 
-  disableWarnings: false, // change this if you don't want any warnings.
+  _disableWarnings: false, // change this if you don't want any warnings.
+  _disableLogging: false,
 
-  warn: function(msg){
-    if (window.console && !this.disableWarnings) {
+  _warn: function(msg){
+    if (window.console && !this._disableWarnings) {
       window.console.warn(msg);
     }
+  },
+
+  _log: function(msg){
+    if (window.console && !this._disableLogging) {
+      window.console.log(msg);
+    }
+  },
+
+  filter: function(array, func) {
+    return this.reduce(array, function(acc, item, index, array){
+      return func(item, index, array) ? acc.concat(item) : acc;
+    }, [])
+  },
+
+  reduce: function (array, func, initval) {
+    var inner = function (acc, rest, func, index) {
+      var result = rest.length > 0 ?
+          func(acc, rest[0], index, array) : acc;
+      return rest.length > 0
+              ? inner(result, rest.slice(1), func, index + 1)
+              : result;
+    };
+
+    return initval ? inner(initval, array, func, 0)
+                   : inner(array[0], array.slice(1), func, 0);
+  },
+
+  map: function (array, func) {
+    return this.reduce(array, function(acc, item, index, array){
+      return acc.concat(func(item, index, array));
+    },[]);
+  },
+
+  every: function(array, func) {
+    var inner = function(rest, func, index) {
+      if (rest.length === 0) {
+        return true;
+      } else {
+        return func(rest[0], index, array) ?
+            inner(rest.slice(1), func, index + 1) : false;
+      }
+    };
+    return inner(array, func, 0);
   },
 
   zip : function(array, zipMap) { // also works as unzip
@@ -42,7 +86,7 @@ var aExt = {
   compact: function(array, removeEmpty) {
     if(array.length>0) {
       return array.filter(function(item){
-        if (removeEmpty&& item instanceof Array) {
+        if (removeEmpty && item instanceof Array) {
           return item.length > 0;
         } else return item !== undefined && item !== null;
       });
@@ -54,26 +98,39 @@ var aExt = {
 };
 
 (function(){
-  if(!aExt.disableWarnings) {
-    if(!Array.prototype.filter) aExt.warn("Array.prototype.filter not implemented");
-    if(!Array.prototype.map) aExt.warn("Array.prototype.map not implemented");
-    if(!Array.prototype.every) aExt.warn("Array.prototype.every not implemented");
-    if(!Array.prototype.concat) aExt.warn("Array.prototype.concat not implemented");
-  }
+//  if(!aExt._disableWarnings) {
+//    if(!Array.prototype.every) aExt._warn("Array.prototype.every not implemented");
+//  }
 
   var extendArray = function(name, method){
-    if (Array.prototype[name]) aExt.warn(
-        "Array.prototype." + name + " already implemented. You can use aExt."
-        + name + " instead.");
+    if (Array.prototype[name]) aExt._log(
+        "Array.prototype." + name + " already implemented. Use aExt."
+        + name + " if you want to use aExt's implementation.");
     else {
       Array.prototype[name] = method;
     }
   };
 
   var methods = [
+    ["filter", function(func) {
+      return aExt.filter(this, func);
+    }],
+
+    ["reduce", function(func, initVal) {
+      return aExt.reduce(this, func, initVal);
+    }],
+
+    ["map", function(func) { return aExt.map(this, func); }],
+
+    ["every", function(func) { return aExt.every(this, func); }],
+
     ["zip", function(zipMap){ return aExt.zip(this, zipMap); }],
+
     ["flatten", function(){ return aExt.flatten(this); }],
-    ["compact", function(removeEmpty){ return aExt.compact(this, removeEmpty); }]
+      
+    ["compact", function(removeEmpty){
+      return aExt.compact(this, removeEmpty);
+    }]
   ];
 
   for (var i = 0; i < methods.length; i++){
