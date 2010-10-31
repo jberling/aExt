@@ -46,4 +46,14 @@ describe("miscellaneous tests", function(){
     expect(result).toEqual(false);
   });
 
+  it('first', function(){
+    var result = ["a", "b", "c"].first();
+    expect(result).toEqual("a");
+  });
+
+  it('last', function(){
+    var result = ["a", "b", "c"].last();
+    expect(result).toEqual("c");
+  })
+
 });

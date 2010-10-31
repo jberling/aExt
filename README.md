@@ -103,7 +103,11 @@ The code above will result in this:
 
 *** first ***
 
+Get the first item in the array.
+
 *** last ***
+
+Get the last item in the array.
 
 *** max ***
 

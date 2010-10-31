@@ -80,6 +80,10 @@ var aExt = {
     return !array.some(func, thisArg);
   },
 
+  first: function(array) { return array[0]; },
+
+  last: function(array) { return array[array.length-1]; },
+
   zip : function(array, zipMap) { // also works as unzip
 
     if (array.length > 0) {
@@ -175,6 +179,14 @@ var aExt = {
 
       ["forEach", function(func, thisArg) {
         return aExt.forEach(this, func, thisArg);
+      }],
+
+      ["first", function() {
+        return aExt.first(this);
+      }],
+
+      ["last", function() {
+        return aExt.last(this);
       }],
 
       ["every", function(func, thisArg) { return aExt.every(this, func, thisArg); }],
