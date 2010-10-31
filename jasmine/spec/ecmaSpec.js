@@ -36,6 +36,13 @@ describe("ECMA-262 functions tests", function(){
     expect(result).toEqual(["a", "c", "e"]);
   });
 
+  it('filter with thisArg', function(){
+    var result = ["a", "b", "c"].filter(function(item){
+      return item === this.str;
+    }, {str: "b"});
+    expect(result).toEqual(["b"]);
+  });
+
   it('map', function(){
     var result = ["a", "b", "c"].map(function(item, index, array){
       return { one: item, two: index, three: array.length };
@@ -58,10 +65,26 @@ describe("ECMA-262 functions tests", function(){
     ]);
   });
 
+  it('map with thisArg', function(){
+    var result = ["a", "b", "c"].map(function(item){
+      return item + ": " + this;
+    }, "I am that this");
+    expect(result).toEqual([
+      "a: I am that this", "b: I am that this", "c: I am that this"
+    ]);
+  });
+
   it('every, being true', function(){
     var result = [ 0, 1, 2 ].every(function (item, index, array){
       return item === index && index < array.length;
     });
+    expect(result).toEqual(true);
+  });
+
+  it('every, with thisArg', function(){
+    var result = [ 0, 1, 2 ].every(function (item, index, array){
+      return item < this.number
+    }, { number: 3 });
     expect(result).toEqual(true);
   });
 

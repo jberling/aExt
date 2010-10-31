@@ -1,4 +1,5 @@
 var aExt = {
+  // Todo: make thisArg work for every method
 
   _disableWarnings: false, // change this if you don't want any warnings.
   _disableLogging: false,
@@ -15,9 +16,10 @@ var aExt = {
     }
   },
 
-  filter: function(array, func) {
+  filter: function(array, func, thisArg) {
     return this.reduce(array, function(acc, item, index, array){
-      if(func(item, index, array)){
+      var keep = func.apply(thisArg, [item, index, array]);
+      if(keep){
         return acc.concat(item instanceof Array ? [item] : item);
       } else return acc;
     }, [])
@@ -37,20 +39,20 @@ var aExt = {
         : inner(array[0], array.slice(1), func, 0);
   },
 
-  map: function (array, func) {
+  map: function (array, func, thisArg) {
     return this.reduce(array, function(acc, item, index, array){
-      var mapped = func(item, index, array);
+      var mapped = func.apply(thisArg, [item, index, array]);
       return acc.concat(mapped instanceof Array ? [mapped] : mapped);
     },[]);
   },
 
-  every: function(array, func) {
+  every: function(array, func, thisArg) {
     var inner = function(rest, func, index) {
       if (rest.length === 0) {
         return true;
       } else {
-        return func(rest[0], index, array) ?
-            inner(rest.slice(1), func, index + 1) : false;
+        var res = func.apply(thisArg, [rest[0], index, array]);
+        return res ? inner(rest.slice(1), func, index + 1) : false;
       }
     };
     return inner(array, func, 0);
@@ -116,25 +118,25 @@ var aExt = {
   };
 
   var methods = [
-    ["filter", function(func) {
-      return aExt.filter(this, func);
+    ["filter", function(func, thisArg) {
+      return aExt.filter(this, func, thisArg);
     }],
 
-    ["reduce", function(func, initVal) {
+    ["reduce", function(func, initVal) { 
       return aExt.reduce(this, func, initVal);
     }],
 
-    ["map", function(func) { return aExt.map(this, func); }],
+    ["map", function(func, thisArg) {
+      return aExt.map(this, func, thisArg); 
+    }],
 
-    ["every", function(func) { return aExt.every(this, func); }],
+    ["every", function(func, thisArg) { return aExt.every(this, func, thisArg); }],
 
     ["zip", function(zipMap){ return aExt.zip(this, zipMap); }],
 
     ["flatten", function(){ return aExt.flatten(this); }],
       
-    ["compact", function(removeEmpty){
-      return aExt.compact(this, removeEmpty);
-    }]
+    ["compact", function(removeEmpty){ return aExt.compact(this, removeEmpty); }]
   ];
 
   for (var i = 0; i < methods.length; i++){
