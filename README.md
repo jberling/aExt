@@ -1,7 +1,7 @@
 # aExt #
 
-aExt is a collection of methods that extends the JavaScript Array. They have been tested on
-Chrome 7, Firefox 3.6 and Opera 10.6. The methods do not work very well with IE8, yet.
+aExt is a collection of methods that extends the JavaScript Array. So far they have been tested on
+Chrome 7, Firefox 3.6, Opera 10.6 and IE8.
 
 ## ECMA-262 ##
 
