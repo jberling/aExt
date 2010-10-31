@@ -17,7 +17,9 @@ var aExt = {
 
   filter: function(array, func) {
     return this.reduce(array, function(acc, item, index, array){
-      return func(item, index, array) ? acc.concat(item) : acc;
+      if(func(item, index, array)){
+        return acc.concat(item instanceof Array ? [item] : item);
+      } else return acc;
     }, [])
   },
 
@@ -30,13 +32,15 @@ var aExt = {
               : result;
     };
 
-    return initval ? inner(initval, array, func, 0)
-                   : inner(array[0], array.slice(1), func, 0);
+    return !(initval === null || initval === undefined)
+        ? inner(initval, array, func, 0)
+        : inner(array[0], array.slice(1), func, 0);
   },
 
   map: function (array, func) {
     return this.reduce(array, function(acc, item, index, array){
-      return acc.concat(func(item, index, array));
+      var mapped = func(item, index, array);
+      return acc.concat(mapped instanceof Array ? [mapped] : mapped);
     },[]);
   },
 
