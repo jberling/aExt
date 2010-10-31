@@ -1,17 +1,15 @@
 var aExt = {
-  // Todo: make thisArg work for every method
+  _doWarn: true, _doLog: true, _extendArray: true, _clashPrefix: "aExt_",
 
-  _disableWarnings: false, // change this if you don't want any warnings.
-  _disableLogging: false,
 
   _warn: function(msg){
-    if (window.console && !this._disableWarnings) {
+    if (window.console && this._doWarn) {
       window.console.warn(msg);
     }
   },
 
   _log: function(msg){
-    if (window.console && !this._disableLogging) {
+    if (window.console && this._doLog) {
       window.console.log(msg);
     }
   },
@@ -44,6 +42,13 @@ var aExt = {
       var mapped = func.apply(thisArg, [item, index, array]);
       return acc.concat(mapped instanceof Array ? [mapped] : mapped);
     },[]);
+  },
+
+  forEach: function(array, func, thisArg) {
+    for(var i = 0; i < array.length; i++){
+      func.apply(thisArg, [array[i], i, array]);
+    }
+    return array;
   },
 
   every: function(array, func, thisArg) {
@@ -116,52 +121,77 @@ var aExt = {
     }
   }
 
-  // unique : function (array) {
-
+  // Todo: Implement these
+  // distinct : remove similar
+  // invert : like inverse, but not changing the "original".
+  // order : like sort, but not changing the "original".
+  // orderBy: like order, but order on specific property.
+  //          [ {name: "John", age: 23}, {name: "Pjotr", age: 12} ].orderBy("age", "name")
+  //          instead of thenBy, use more variables. To order descending: orderBy("> age")
+  // average: returns the average value.
+  // contains: or does it exists already?
+  // except: [1, 2, 3].except([2]) --> [1, 3]
+  // groupBy: gruppera items som resulterar i samma resultat.
+  // intersect: [1, 2, 3, 4].intersect([2, 3, 5]) --> [2, 3]
+  // joinSets: [1, 2, 3, 4].joinSets([2, 3, 4]) --> [1, 2, 3, 4, 5]
+  // difference: [1, 2, 3, 4].difference([3, 4, 5]) --> [1, 2]
+  // symmetricDiff: [1, 2, 3, 4].symmetricDiff([3, 4, 5]) --> [1, 2, 5]
+  // first and last?
+  // max: get the one with biggest number
+  // min: opposite of max
+  // skipTil: [1, 2, 3, 4].skipWhile(function(item){ return item < 3; }
+  // 
+  // ECMA: forEach
+  // ECMA: reduceRight
+  // ECMA: indexOf, lastIndexOf
 };
 
 (function(){
-//  if(!aExt._disableWarnings) {
-//    if(!Array.prototype.every) aExt._warn("Array.prototype.every not implemented");
-//  }
+  // Todo: Check out [[DefineOwnProperty]](p, desc, throw) to see if that's a better way of handling things.
 
-  var extendArray = function(name, method){
-    if (Array.prototype[name]) aExt._log(
-        "Array.prototype." + name + " already implemented. Use aExt."
-        + name + " if you want to use aExt's implementation.");
-    else {
-      Array.prototype[name] = method;
+  if (aExt._extendArray) {
+
+    var extendArray = function(name, method){
+      if (Array.prototype[name]) aExt._log(
+          "Array.prototype." + name + " already implemented. Use Array.prototype."
+          + aExt._clashPrefix + name + " if you want to use aExt's implementation.");
+      else {
+        Array.prototype[name] = method;
+      }
+    };
+
+    var methods = [
+      ["filter", function(func, thisArg) {
+        return aExt.filter(this, func, thisArg);
+      }],
+
+      ["reduce", function(func, initVal) {
+        return aExt.reduce(this, func, initVal);
+      }],
+
+      ["map", function(func, thisArg) {
+        return aExt.map(this, func, thisArg);
+      }],
+
+      ["forEach", function(func, thisArg) {
+        return aExt.forEach(this, func, thisArg);
+      }],
+
+      ["every", function(func, thisArg) { return aExt.every(this, func, thisArg); }],
+
+      ["some", function(func, thisArg) { return aExt.some(this, func, thisArg); }],
+
+      ["none", function(func, thisArg) { return aExt.none(this, func, thisArg); }],
+
+      ["zip", function(zipMap){ return aExt.zip(this, zipMap); }],
+
+      ["flatten", function(){ return aExt.flatten(this); }],
+
+      ["compact", function(removeEmpty){ return aExt.compact(this, removeEmpty); }]
+    ];
+
+    for (var i = 0; i < methods.length; i++){
+      extendArray(methods[i][0], methods[i][1]);
     }
-  };
-
-  var methods = [
-    ["filter", function(func, thisArg) {
-      return aExt.filter(this, func, thisArg);
-    }],
-
-    ["reduce", function(func, initVal) { 
-      return aExt.reduce(this, func, initVal);
-    }],
-
-    ["map", function(func, thisArg) {
-      return aExt.map(this, func, thisArg); 
-    }],
-
-    ["every", function(func, thisArg) { return aExt.every(this, func, thisArg); }],
-
-    ["some", function(func, thisArg) { return aExt.some(this, func, thisArg); }],  
-
-    ["none", function(func, thisArg) { return aExt.none(this, func, thisArg); }],  
-
-    ["zip", function(zipMap){ return aExt.zip(this, zipMap); }],
-
-    ["flatten", function(){ return aExt.flatten(this); }],
-      
-    ["compact", function(removeEmpty){ return aExt.compact(this, removeEmpty); }]
-  ];
-
-  for (var i = 0; i < methods.length; i++){
-    extendArray(methods[i][0], methods[i][1]);
   }
-
 })();

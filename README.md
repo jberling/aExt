@@ -1,15 +1,21 @@
-# aExt #
+# aExt *Work in progress* #
 
 aExt is a collection of methods that extends the JavaScript Array. So far they have been tested on
 Chrome 7, Firefox 3.6, Opera 10.6 and IE8.
+
+They are intended to be used with a functional approach. The methods will treat the caller
+as if it was immutable, and will therefor not change it.
+
+It was inspired by F#, LINQ, Prototype and the ECMA-262 specification.
 
 ## ECMA-262 ##
 
 The ECMA-262 specification (http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-262.pdf)
 defines several useful array methods. aExt only Implements these methods for browsers who doesn't implement them natively.
-So far aExt offers implementations of filter, map, reduce, some and every.
+So far aExt offers implementations of filter, map, forEach, reduce, some and every. (reduceRight, indexOf and lastIndexOf
+will also be implemented eventually.)
 
-## Beyond ECMA
+## Beyond ECMA-262
 
 ### none ###
 
@@ -76,3 +82,33 @@ The code above will result in this:
       {name: "pear"  , color: "green" , origin: "Holland"},
       {name: "banana", color: "yellow", origin: "Kenya"  }
     ]
+
+*** distinct ***
+
+*** invert ***
+
+*** order ***
+
+*** orderBy ***
+
+*** groupBy ***
+
+*** average ***
+
+*** contains ***
+
+*** except ***
+
+*** intersect ***
+
+*** first ***
+
+*** last ***
+
+*** max ***
+
+*** min ***
+
+*** equal ***
+
+

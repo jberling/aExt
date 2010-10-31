@@ -115,4 +115,13 @@ describe("ECMA-262 functions tests", function(){
     expect(result).toEqual(false);
   });
 
+  it('forEach', function(){
+    var result = "";
+    ["a", "b", "c"].forEach(function(item, index, array){
+      result += item + "-" + index + "-" + array.length;
+      result += index === 2 ? this.letter : "";
+    }, {letter: "d"});
+    expect(result).toEqual("a-0-3b-1-3c-2-3d");
+  });
+
 });
