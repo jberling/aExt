@@ -75,17 +75,44 @@ describe("ECMA-262 functions tests", function(){
   });
 
   it('every, being true', function(){
-    var result = [ 0, 1, 2 ].every(function (item, index, array){
+    var result = [0, 1, 2].every(function (item, index, array){
       return item === index && index < array.length;
     });
     expect(result).toEqual(true);
   });
 
+  it('every, being false', function(){
+    var result = [0, 1, 2].every(function (item, index, array){
+      return index === 1;
+    });
+    expect(result).toEqual(false);
+  });
+
   it('every, with thisArg', function(){
-    var result = [ 0, 1, 2 ].every(function (item, index, array){
+    var result = [0, 1, 2].every(function (item, index, array){
       return item < this.number
     }, { number: 3 });
     expect(result).toEqual(true);
+  });
+
+  it('some, with thisArg', function(){
+    var result = [0, 1, 2].some(function (item, index, array){
+      return item === this.number;
+    }, {number: 2})
+  });
+
+  it('some, being true', function(){
+    var result = [0, 1, 2].some(function (item, index, array){
+      return index === 1;
+    });
+    expect(result).toEqual(true);
+  });
+
+  it('some, being false', function(){
+    var result = [0, 1, 2].some(function (item, index, array){
+      return index === 5;
+    });
+    expect(result).toEqual(false);
   });
 
 });

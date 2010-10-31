@@ -7,9 +7,13 @@ Chrome 7, Firefox 3.6, Opera 10.6 and IE8.
 
 The ECMA-262 specification (http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-262.pdf)
 defines several useful array methods. aExt only Implements these methods for browsers who doesn't implement them natively.
-So far aExt offers implementations of filter, map, reduce and every.
+So far aExt offers implementations of filter, map, reduce, some and every.
 
 ## Beyond ECMA
+
+### none ###
+
+The opposite of some.
 
 ### compact ###
 

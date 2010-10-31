@@ -25,4 +25,25 @@ describe("miscellaneous tests", function(){
     expect(result).toEqual([false, [], "a", 1, [[]], 2]);
   });
 
+  it('none, being true', function(){
+    var result = [ 1, 2, 3 ].none(function(item, index, array){
+      return item === index || index === array.length;
+    });
+    expect(result).toEqual(true);
+  });
+
+  it('none, being false', function(){
+    var result = [ 1, 2, 3 ].none(function(item, index, array){
+      return item === array.length && index === array.length-1;
+    });
+    expect(result).toEqual(false);
+  });
+
+  it('none, with thisArg', function(){
+    var result = [ 1, 2, 3 ].none(function(item, index, array){
+      return item === this.value;
+    }, {value:2});
+    expect(result).toEqual(false);
+  });
+
 });

@@ -58,6 +58,23 @@ var aExt = {
     return inner(array, func, 0);
   },
 
+  some: function(array, func, thisArg) {
+    var inner = function(rest, func, index) {
+      if(rest.length === 0) {
+        return false;
+      }
+      else {
+        var res = func.apply(thisArg, [rest[0], index, array]);
+        return res ? true : inner(rest.slice(1), func, index + 1);
+      }
+    };
+    return inner(array, func, 0)
+  },
+
+  none: function(array, func, thisArg) {
+    return !array.some(func, thisArg);
+  },
+
   zip : function(array, zipMap) { // also works as unzip
 
     if (array.length > 0) {
@@ -131,6 +148,10 @@ var aExt = {
     }],
 
     ["every", function(func, thisArg) { return aExt.every(this, func, thisArg); }],
+
+    ["some", function(func, thisArg) { return aExt.some(this, func, thisArg); }],  
+
+    ["none", function(func, thisArg) { return aExt.none(this, func, thisArg); }],  
 
     ["zip", function(zipMap){ return aExt.zip(this, zipMap); }],
 
