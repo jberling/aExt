@@ -140,7 +140,6 @@ var aExt = {
   // joinSets: [1, 2, 3, 4].joinSets([2, 3, 4]) --> [1, 2, 3, 4, 5]
   // difference: [1, 2, 3, 4].difference([3, 4, 5]) --> [1, 2]
   // symmetricDiff: [1, 2, 3, 4].symmetricDiff([3, 4, 5]) --> [1, 2, 5]
-  // first and last?
   // max: get the one with biggest number
   // min: opposite of max
   // skipTil: [1, 2, 3, 4].skipWhile(function(item){ return item < 3; }
