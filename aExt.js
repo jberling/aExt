@@ -24,17 +24,20 @@ var aExt = {
   },
 
   reduce: function (array, func, initval) {
-    var inner = function (acc, rest, func, index) {
-      var result = rest.length > 0 ?
-          func(acc, rest[0], index, array) : acc;
-      return rest.length > 0
-              ? inner(result, rest.slice(1), func, index + 1)
-              : result;
-    };
+    var i = 0, acc;
 
-    return !(initval === null || initval === undefined)
-        ? inner(initval, array, func, 0)
-        : inner(array[0], array.slice(1), func, 0);
+    if (!(initval === null || initval === undefined)) {
+      acc = initval;
+    } else {
+      acc = array[0];
+      i++;
+    }
+
+    for (i; i < array.length; i++) {
+      acc = func(acc, array[i], i, array);
+    }
+    
+    return acc;
   },
 
   map: function (array, func, thisArg) {
