@@ -93,8 +93,8 @@ returns the biggest value. By default each items is compared as they are, but if
 is passed as an argument, the items will be treated as an object and the value of the property
 with the same name as the string will be compared.
 
-[1, 3, 6, 12, 4].max(); // will return 12
-["a", "z", "q", "b"].max(); // will return "z"
+    [1, 3, 6, 12, 4].max(); // will return 12
+    ["a", "z", "q", "b"].max(); // will return "z"
 
 ### To come... ###
 distinct, order, orderBy, groupBy, average, contains, except, intersect, min, equal
