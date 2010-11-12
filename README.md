@@ -95,6 +95,7 @@ with the same name as the string will be compared.
 
     [1, 3, 6, 12, 4].max(); // will return 12
     ["a", "z", "q", "b"].max(); // will return "z"
+    [{name: "John", age: 46}, {name:"Stephano", age:23}].max("age"); // will return 46
 
 ### To come... ###
 distinct, order, orderBy, groupBy, average, contains, except, intersect, min, equal
