@@ -79,7 +79,7 @@ describe("miscellaneous tests", function(){
       {age: 24, name: "Gusten"},
       {age:12, eyeColor: "brown"}
     ].max("age");
-    expect(result).toEqual(24);
+    expect(result).toEqual({age: 24, name: "Gusten"});
   });
   
 //

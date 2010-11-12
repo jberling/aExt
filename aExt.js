@@ -138,22 +138,27 @@ var aExt = {
     }, []);
   },
 
-  max: function(array, mod) {
+  max: function(array, propertyName) {
 
-    if (mod && typeof(mod) === "string") {
-      array = array.map(function(item){
-        return item[mod];
-      });
-    }
-
-    return array.reduce(function(acc, item){
-      if (typeof(acc) !== typeof(item)) {
-        if (!aExt._isEmptyArray(item)) {
-          aExt._warn ("max is called by an array containing items of different type. The result can not be trusted.");
+    if (propertyName && typeof(propertyName) === "string") {
+      return array.reduce(function(acc, item){
+        if (typeof(acc[propertyName]) !== typeof(item[propertyName])) {
+          if (!aExt._isEmptyArray(item)) {
+            aExt._warn ("max is called by an array containing items of different type. The result can not be trusted.");
+          }
         }
-      }
-      return item > acc ? item: acc;
-    })
+        return item[propertyName] > acc[propertyName] ? item: acc;
+      })
+    } else {
+      return array.reduce(function(acc, item){
+        if (typeof(acc) !== typeof(item)) {
+          if (!aExt._isEmptyArray(item)) {
+            aExt._warn ("max is called by an array containing items of different type. The result can not be trusted.");
+          }
+        }
+        return item > acc ? item: acc;
+      })
+    }
   }
 
   // Todo: Implement these
@@ -231,7 +236,7 @@ var aExt = {
 
       ["invert", function() { return aExt.invert(this); }],
 
-      ["max", function(mod) { return aExt.max(this, mod); }],
+      ["max", function(propertyName) { return aExt.max(this, propertyName); }],
 
       ["compact", function(removeEmpty){ return aExt.compact(this, removeEmpty); }]
     ];
