@@ -14,6 +14,10 @@ var aExt = {
     }
   },
 
+  _isEmptyArray: function(o){
+    return o instanceof Array && o.length === 0;
+  },
+  
   filter: function(array, func, thisArg) {
     return this.reduce(array, function(acc, item, index, array){
       var keep = func.apply(thisArg, [item, index, array]);
@@ -126,11 +130,35 @@ var aExt = {
         } else return item !== undefined && item !== null;
       });
     }
+  },
+
+  invert : function(array) {
+    return array.reduce(function(acc, item){
+      return [item].concat(acc);
+    }, []);
+  },
+
+  max: function(array, mod) {
+
+    if (mod && typeof(mod) === "string") {
+      array = array.map(function(item){
+        return item[mod];
+      });
+    }
+
+    return array.reduce(function(acc, item){
+      if (typeof(acc) !== typeof(item)) {
+        if (!aExt._isEmptyArray(item)) {
+          aExt._warn ("max is called by an array containing items of different type. The result can not be trusted.");
+        }
+      }
+      return item > acc ? item: acc;
+    })
   }
 
   // Todo: Implement these
   // distinct : remove similar
-  // invert : like inverse, but not changing the "original".
+
   // order : like sort, but not changing the "original".
   // orderBy: like order, but order on specific property.
   //          [ {name: "John", age: 23}, {name: "Pjotr", age: 12} ].orderBy("age", "name")
@@ -200,6 +228,10 @@ var aExt = {
       ["zip", function(zipMap){ return aExt.zip(this, zipMap); }],
 
       ["flatten", function(){ return aExt.flatten(this); }],
+
+      ["invert", function() { return aExt.invert(this); }],
+
+      ["max", function(mod) { return aExt.max(this, mod); }],
 
       ["compact", function(removeEmpty){ return aExt.compact(this, removeEmpty); }]
     ];

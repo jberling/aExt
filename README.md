@@ -84,7 +84,19 @@ Get the first item in the array.
 ### last ###
 Get the last item in the array.
 
+### invert ###
+Like reverse, but instead of changing the caller it returns a reversed copy and leaves the
+caller unchanged.
+
+### max ###
+returns the biggest value. By default each items is compared as they are, but if a string
+is passed as an argument, the items will be treated as an object and the value of the property
+with the same name as the string will be compared.
+
+[1, 3, 6, 12, 4].max(); // will return 12
+["a", "z", "q", "b"].max(); // will return "z"
+
 ### To come... ###
-distinct, invert, order, orderBy, groupBy, average, contains, except, intersect, max, min, equal
+distinct, order, orderBy, groupBy, average, contains, except, intersect, min, equal
 
 
