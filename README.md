@@ -89,7 +89,7 @@ Like reverse, but instead of changing the caller it returns a reversed copy and 
 caller unchanged.
 
 ### max ###
-returns the biggest value. By default each items is compared as they are, but if a string
+Returns the biggest value. By default each items is compared as they are, but if a string
 is passed as an argument, the items will be treated as an object and the value of the property
 with the same name as the string will be compared.
 
@@ -102,7 +102,14 @@ with the same name as the string will be compared.
     // will return {name: "John", age: 46}
     [{name: "John", age: 46}, {name:"Stephano", age:23}].max("age");
 
+### min ###
+Like max, but the opposite. The smallest value is returned.
+
+### distinct (Doesn't work yet!) ###
+Remove duplicates. The result will be an array with unique items.
+
+    // will return [ "a", "b", 1, 2 ]
+    [ "b", 1, 2, 1, 1, "b", "a" ].distinct();
+
 ### To come... ###
-distinct, order, orderBy, groupBy, average, contains, except, intersect, min, equal
-
-
+sortBy (maybe not), groupBy, average, contains, except, intersect, equal

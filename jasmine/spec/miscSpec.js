@@ -82,31 +82,34 @@ describe("miscellaneous tests", function(){
     expect(result).toEqual({age: 24, name: "Gusten"});
   });
   
-//
-//  it('min, strings and empty array', function(){
-//    var result = ["a", "b", [], "c"].min;
-//    expect(result).toEqual([]);
-//  });
-//
-//  it('min, numbers', function(){
-//    var result = [2, 1, 3].min();
-//    expect(result).toEqual(1);
-//  });
-//
-//  it('min, property', function(){
-//    var result = [
-//      {age: 23, name: "John"},
-//      {age: 24, name: "Gusten"},
-//      {age:12, eyeColor: "brown"}
-//    ].max("age");
-//    expect(result).toEqual(12);
-//  });
-//
-//  it('min, numbers and strings', function() {
-//    var result = [1, 2, "a", "b"]
-//    expect(result).toEqual(false) // ska ge ett felmeddelande.
-//  });
-//
+  it('min, strings and empty array', function(){
+    var result = ["a", "b", [], "c"].min();
+    expect(result).toEqual([]);
+  });
+
+  it('min, numbers', function(){
+    var result = [2, 1, 3].min();
+    expect(result).toEqual(1);
+  });
+
+  it('min, property', function(){
+    var result = [
+      {age: 23, name: "John"},
+      {age: 24, name: "Gusten"},
+      {age:12, eyeColor: "brown"}
+    ].min("age");
+    expect(result).toEqual({age:12, eyeColor: "brown"});
+  });
+
+  it('distinct', function(){
+    var result = [
+      "a", ["b"], [], 1, 2, 1, "a", "b", [], ["a"], ["b"]
+    ].distinct();
+    expect(result).toEqual([
+      [], 1, 2, "a", ["a"], "b", ["b"]
+    ]);
+  })
+
 //  it('range, numbers', function(){
 //    var result = [1, 2, 4, 3].range();
 //    expect(result).toEqual([1, 4]);

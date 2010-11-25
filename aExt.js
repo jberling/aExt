@@ -23,14 +23,16 @@ var aExt = {
       var keep = func.apply(thisArg, [item, index, array]);
       if(keep){
         return acc.concat(item instanceof Array ? [item] : item);
-      } else return acc;
+      } else {
+        return acc;
+      }
     }, [])
   },
 
   reduce: function (array, func, initval) {
     var i = 0, acc;
 
-    if (!(initval === null || initval === undefined)) {
+    if (initval !== null && initval !== undefined) {
       acc = initval;
     } else {
       acc = array[0];
@@ -96,8 +98,10 @@ var aExt = {
     if (array.length > 0) {
       var zipped = array.reduce(function(acc, rest){
         return acc.map(function(item, index){
-          item = item instanceof Array ? item : [item];
-          if (rest[index]) return item.concat(rest[index]);
+          arrayItem = item instanceof Array ? item : [item];
+          if (rest[index]) {
+            return arrayItem.concat(rest[index]);
+          }
         })
       });
 
@@ -107,8 +111,12 @@ var aExt = {
         return zipped.map(function(item){
           return zipMap.apply(this, item);
         })
-      } else return zipped;
-    } else return [];
+      } else {
+        return zipped;
+      }
+    } else {
+      return [];
+    }
   },
 
   flatten: function (array) {
@@ -119,7 +127,9 @@ var aExt = {
         return acc instanceof Array ? acc.concat(flattened)
             : [acc, flattened];
       }, []);
-    } else return [];
+    } else {
+      return [];
+    }
   },
 
   compact: function(array, removeEmpty) {
@@ -127,7 +137,9 @@ var aExt = {
       return array.filter(function(item){
         if (removeEmpty && item instanceof Array) {
           return item.length > 0;
-        } else return item !== undefined && item !== null;
+        } else {
+          return item !== undefined && item !== null;
+        }
       });
     }
   },
@@ -144,7 +156,7 @@ var aExt = {
       return array.reduce(function(acc, item){
         if (typeof(acc[propertyName]) !== typeof(item[propertyName])) {
           if (!aExt._isEmptyArray(item)) {
-            aExt._warn ("max is called by an array containing items of different type. The result can not be trusted.");
+            aExt._warn ("max is called by an array containing items of different type.");
           }
         }
         return item[propertyName] > acc[propertyName] ? item: acc;
@@ -153,16 +165,58 @@ var aExt = {
       return array.reduce(function(acc, item){
         if (typeof(acc) !== typeof(item)) {
           if (!aExt._isEmptyArray(item)) {
-            aExt._warn ("max is called by an array containing items of different type. The result can not be trusted.");
+            aExt._warn ("max is called by an array containing items of different type.");
           }
         }
         return item > acc ? item: acc;
       })
     }
+  },
+
+  min: function(array, propertyName) {
+    if (propertyName && typeof(propertyName) === "string") {
+      return array.reduce(function(acc, item){
+        if (typeof(acc[propertyName]) !== typeof(item[propertyName])) {
+          if (!aExt._isEmptyArray(item)) {
+            aExt._warn ("min is called by an array containing items of different type.");
+          }
+        }
+        return item[propertyName] < acc[propertyName] ? item: acc;
+      })
+    } else {
+      return array.reduce(function(acc, item){
+        if (typeof(acc) !== typeof(item)) {
+          if (!aExt._isEmptyArray(item)) {
+            aExt._warn ("min is called by an array containing items of different type.");
+          }
+        }
+        return item < acc ? item: acc;
+      })
+    }
+  },
+
+  distinct: function(array){
+    var sorted =  array.slice().sort(function(x, y){
+      var xIsA = x instanceof Array,
+          yIsA = y instanceof Array;
+      if ((xIsA && yIsA) || (!xIsA && !yIsA)) {
+        return x < y;
+      } else {
+        return xIsA;
+      }
+    });
+    return sorted.reduce(function(acc, item){
+      console.log("acc:");
+      console.log(acc);
+      if (acc.last() === item) {
+        return acc;
+      } else {
+        return acc.concat(item);
+      }
+    }, []);
   }
 
   // Todo: Implement these
-  // distinct : remove similar
 
   // order : like sort, but not changing the "original".
   // orderBy: like order, but order on specific property.
@@ -171,16 +225,13 @@ var aExt = {
   // average: returns the average value.
   // contains: or does it exists already?
   // except: [1, 2, 3].except([2]) --> [1, 3]
-  // groupBy: gruppera items som resulterar i samma resultat.
+  // groupBy: group items returning the same result.
   // intersect: [1, 2, 3, 4].intersect([2, 3, 5]) --> [2, 3]
   // joinSets: [1, 2, 3, 4].joinSets([2, 3, 4]) --> [1, 2, 3, 4, 5]
   // difference: [1, 2, 3, 4].difference([3, 4, 5]) --> [1, 2]
   // symmetricDiff: [1, 2, 3, 4].symmetricDiff([3, 4, 5]) --> [1, 2, 5]
-  // max: get the one with biggest number
-  // min: opposite of max
   // skipTil: [1, 2, 3, 4].skipWhile(function(item){ return item < 3; }
   // 
-  // ECMA: forEach
   // ECMA: reduceRight
   // ECMA: indexOf, lastIndexOf
 };
@@ -191,9 +242,13 @@ var aExt = {
   if (aExt._extendArray) {
 
     var extendArray = function(name, method){
-      if (Array.prototype[name]) aExt._log(
+      if (Array.prototype[name]) {
+        var clashName = aExt._clashPrefix + name;
+        aExt._log(
           "Array.prototype." + name + " already implemented. Use Array.prototype."
-          + aExt._clashPrefix + name + " if you want to use aExt's implementation.");
+          + clashName + " if you want to use aExt's implementation.");
+          Array.prototype[clashName] = method;
+      }
       else {
         Array.prototype[name] = method;
       }
@@ -238,7 +293,12 @@ var aExt = {
 
       ["max", function(propertyName) { return aExt.max(this, propertyName); }],
 
-      ["compact", function(removeEmpty){ return aExt.compact(this, removeEmpty); }]
+      ["min", function(propertyName) { return aExt.min(this, propertyName); }],  
+
+      ["compact", function(removeEmpty){ return aExt.compact(this, removeEmpty); }],
+
+      ["distinct", function() { return aExt.distinct(this); }]
+        
     ];
 
     for (var i = 0; i < methods.length; i++){
