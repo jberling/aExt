@@ -196,32 +196,36 @@ var aExt = {
   },
 
   distinct: function(array){
-    var sorted =  array.slice().sort(function(x, y){
-      var xIsA = x instanceof Array,
-          yIsA = y instanceof Array;
-      if ((xIsA && yIsA) || (!xIsA && !yIsA)) {
-        return x < y;
-      } else {
-        return xIsA;
-      }
-    });
+    var sorted =  array.order();
+    
     return sorted.reduce(function(acc, item){
-      console.log("acc:");
-      console.log(acc);
       if (acc.last() === item) {
         return acc;
       } else {
         return acc.concat(item);
       }
     }, []);
+  },
+
+  order: function(array, comparer) {
+    var clone = array.slice();
+    return clone.sort(comparer);
+  },
+
+  orderBy: function(array, propertyName) {
+
+    var splitted = propertyName.split(" "),
+        desc = splitted.first().match(/:desc */),
+        prop = splitted.last();
+
+    return array.order(function(x, y){
+      return desc ? x[prop] < y[prop] :  x[prop] > y[prop];
+    })
   }
 
   // Todo: Implement these
 
-  // order : like sort, but not changing the "original".
-  // orderBy: like order, but order on specific property.
-  //          [ {name: "John", age: 23}, {name: "Pjotr", age: 12} ].orderBy("age", "name")
-  //          instead of thenBy, use more variables. To order descending: orderBy("> age")
+  // orderBy: instead of thenBy, use more variables. persons.orderBy("age, desc:income")
   // average: returns the average value.
   // contains: or does it exists already?
   // except: [1, 2, 3].except([2]) --> [1, 3]
@@ -297,8 +301,12 @@ var aExt = {
 
       ["compact", function(removeEmpty){ return aExt.compact(this, removeEmpty); }],
 
-      ["distinct", function() { return aExt.distinct(this); }]
-        
+      ["distinct", function() { return aExt.distinct(this); }],
+
+      ["order", function(comparer) { return aExt.order(this, comparer); }],
+
+      ["orderBy", function(propertyName) { return aExt.orderBy(this, propertyName); }]  
+
     ];
 
     for (var i = 0; i < methods.length; i++){

@@ -93,23 +93,52 @@ Returns the biggest value. By default each items is compared as they are, but if
 is passed as an argument, the items will be treated as an object and the value of the property
 with the same name as the string will be compared.
 
-    // will return 12
     [1, 3, 6, 12, 4].max();
+    // will return 12
 
-    // will return "z"
     ["a", "z", "q", "b"].max();
+    // will return "z"
 
-    // will return {name: "John", age: 46}
     [{name: "John", age: 46}, {name:"Stephano", age:23}].max("age");
+    // will return {name: "John", age: 46}
 
 ### min ###
 Like max, but the opposite. The smallest value is returned.
 
-### distinct (Doesn't work yet!) ###
-Remove duplicates. The result will be an array with unique items.
+### distinct ###
+Remove duplicates. The result will be an array with unique items. This function
+doesn't work well with nested arrays.
 
-    // will return [ "a", "b", 1, 2 ]
     [ "b", 1, 2, 1, 1, "b", "a" ].distinct();
+    // will return [ 1, 2, "a", "b" ]
 
-### To come... ###
-sortBy (maybe not), groupBy, average, contains, except, intersect, equal
+### order ###
+Works like sort, but it doesn't change the original Array.
+
+### orderBy ###
+Orders an array by the property named by the argument. By default it orders
+the objects in an ascending order.
+
+    var persons = [
+      { age: 10, name: "Sara" },
+      { age: 3, name: "Burt" },
+      { age: 23, name: "Stephan" }
+    ];
+
+    persons.orderBy("age");
+    
+    // will return an array sorted on age in ascending order.
+    // [
+    //   { age: 3, name: "Burt" },
+    //   { age: 10, name: "Sara" },
+    //   { age: 23, name: "Stephan" }
+    // ]
+
+    persons.orderBy(":desc age");
+
+    // will return an array sorted on age in descending order.
+    // [
+    //   { age: 23, name: "Stephan" },
+    //   { age: 10, name: "Sara" },
+    //   { age: 3, name: "Burt" }
+    // ]

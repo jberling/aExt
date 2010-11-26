@@ -103,10 +103,70 @@ describe("miscellaneous tests", function(){
 
   it('distinct', function(){
     var result = [
-      "a", ["b"], [], 1, 2, 1, "a", "b", [], ["a"], ["b"]
+      "a", "b", 1, 2, 1, "a", "b"
     ].distinct();
     expect(result).toEqual([
-      [], 1, 2, "a", ["a"], "b", ["b"]
+      1, 2, "a", "b"
+    ]);
+  });
+
+  it('order, assert original is not changed', function(comparer){
+    var orig = [ "a", "b", 1, "a", "a", 2, 3 ];
+    var result = orig.order(comparer);
+    expect(orig).toEqual([ "a", "b", 1, "a", "a", 2, 3 ]);
+  });
+
+  it('order', function(comparer){
+    var orig = [ "a", "b", 1, "a", "a", 2, 1, 3 ];
+    var result = orig.order(comparer);
+    expect(result).toEqual([ 1, 1, 2, 3, "a", "a", "a", "b" ]);
+  });
+
+  it ("orderBy", function(propertyName){
+    var result = [
+      { age: 23, name: "Elin" },
+      { age: 12, name: "Gunnar" },
+      { age: 45, name: "Bernard" },
+      { age: 10, name: "Ethelsten" }
+    ].orderBy("age");
+
+    expect(result).toEqual([
+      { age: 10, name: "Ethelsten" },
+      { age: 12, name: "Gunnar" },
+      { age: 23, name: "Elin" },
+      { age: 45, name: "Bernard" }
+    ]);
+  });
+
+  it("orderBy ascending", function(propertyName){
+    var result = [
+      { age: 23, name: "Elin" },
+      { age: 12, name: "Gunnar" },
+      { age: 45, name: "Bernard" },
+      { age: 10, name: "Ethelsten" }
+    ].orderBy(":asc age");
+
+    expect(result).toEqual([
+      { age: 10, name: "Ethelsten" },
+      { age: 12, name: "Gunnar" },
+      { age: 23, name: "Elin" },
+      { age: 45, name: "Bernard" }
+    ]);
+  });
+
+  it("orderBy descending", function(propertyName){
+    var result = [
+      { age: 23, name: "Elin" },
+      { age: 12, name: "Gunnar" },
+      { age: 45, name: "Bernard" },
+      { age: 10, name: "Ethelsten" }
+    ].orderBy(":desc age");
+
+    expect(result).toEqual([
+      { age: 45, name: "Bernard" },
+      { age: 23, name: "Elin" },
+      { age: 12, name: "Gunnar" },
+      { age: 10, name: "Ethelsten" },
     ]);
   })
 
